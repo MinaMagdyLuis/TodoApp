@@ -1,0 +1,55 @@
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:projects/shared/todo_cubit/todo_cubit.dart';
+import 'package:projects/shared/todo_cubit/todo_states.dart';
+import '../../shared/components/components.dart';
+import '../../shared/constants.dart';
+
+class NewTasks extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return BlocConsumer<TodoCubit, TodoState>(
+      listener: (context, state) {},
+      builder: (context, state) {
+        var tasks = TodoCubit.getObject(context).newTasks;
+        return Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 8.0),
+          child: tasks.length <= 0
+              ? Center(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Icon(Icons.menu,size: 35),
+                      SizedBox(height: 10,),
+                      Text(
+                        'No tasks yet , Please add a task',
+                        style: TextStyle(
+                            color: Colors.black,
+                            fontWeight: FontWeight.bold,
+                            fontSize: 25),
+                      )
+                    ],
+                  ),
+                )
+              : ListView.separated(
+                  itemBuilder: (context, index) {
+                    return buildTaskItem(
+                      time: tasks[index]['time'],
+                      date: tasks[index]['date'],
+                      title: tasks[index]['title'],
+                      context: context,
+                      id: tasks[index]['id'],
+                    );
+                  },
+                  separatorBuilder: (context, index) {
+                    return Container(
+                      height: 3,
+                      color: Colors.white,
+                    );
+                  },
+                  itemCount: tasks.length),
+        );
+      },
+    );
+  }
+}
